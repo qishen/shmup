@@ -1,0 +1,15 @@
+{
+  "name": "ShmupGame",
+  "version": "0.0.0",
+  "description": "Multiplayer real time shooting game",
+  "dependencies": {
+    "ejs": "latest",
+    "engine.io": "^1.5.1",
+    "eureca.io": "latest",
+    "express": "latest",
+    "hbs": "latest",
+    "path": "latest",
+    "socket.io": "latest"
+  },
+  "author": "Qishen Zhang"
+}

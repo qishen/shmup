@@ -1,0 +1,10 @@
+{
+  "name": "shooting-game",
+  "version": "0.0.0",
+  "authors": [
+    "Qishen Zhang"
+  ],
+  "dependencies": {
+    "phaser-official": "latest"
+  }
+}

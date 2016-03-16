@@ -1,0 +1,8 @@
+.DS_Store
+*.db
+*.sublime-*
+
+node_modules/
+src/client/bower_components/
+src/client/dist/
+

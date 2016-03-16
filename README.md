@@ -1,7 +1,10 @@
-Install http-server:
-npm install http-server -g
+## Shooting Game
 
-Run server on root directory:
-[path] defaults to ./public if the folder exists, and ./ otherwise.
-http-server [path] [options]
+### Description
+Multi-players shooting game across machines using WebSockets.
 
+### Getting Started
+* `npm install` Install all node modules under main directory.
+* `npm run bower-install` Install bower dependencies for frontend.
+* `npm run build` Build project to generate minified css and browserified JS file.
+* `npm start` to run server locally or `npm run gulp-start` to run sever in development mode.

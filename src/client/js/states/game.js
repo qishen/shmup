@@ -11,6 +11,8 @@ var Game = function () {
   this.score = 0;
   this.cursors;
   this.myId;
+  this.explosions;
+  this.lives = 3;
 }
 
 Game.prototype.connectSockets = function (callback) {
@@ -65,13 +67,36 @@ Game.prototype.addPlayerShip = function (id) {
   console.log("player ship created");
 }
 
+Game.prototype.createExplosion = function (x, y) {
+  // Create an explosion :)
+  var explosion = this.explosions.getFirstExists(false);
+  if(explosion){
+    explosion.reset(x, y);
+    explosion.play('kaboom', 30, false, true);
+  }
+}
+
 Game.prototype.playerShootEnemyHandler = function(bullet, enemy){
   this.score += 20;
   var textString = 'Score: ' + this.score;
   this.scoreText.setText(textString);
   console.log("player shot enemy");
+  this.createExplosion(enemy.body.x, enemy.body.y);
+  // Kill bullet and enenmy
   bullet.kill();
   enemy.kill();
+}
+
+Game.prototype.enemyHitPlayerHandler = function (player, enemy) {
+  if(enemy.key !== 'basic_enemy') enemy.kill(); // Means bullet hits player
+  var originX = this.game.width/2 - 15;
+  var originY = this.game.height - 100;
+  if(player.body.x === originX && player.body.y === originY)
+    return;
+  var live = this.lives.getFirstAlive();
+  if(live) live.kill(); // Reduce one life after hit by enemy
+  this.createExplosion(player.body.x, player.body.y);
+  player.reset(originX, originY);
 }
 
 Game.prototype.create = function () {
@@ -85,6 +110,21 @@ Game.prototype.create = function () {
   this.game.physics.startSystem(Phaser.Physics.ARCADE);
   this.game.background = this.game.add.tileSprite(0, 0, this.game.width, this.game.height, 'bg');
   this.game.background.autoScroll(0, 40);
+
+  // Create explosion pool
+  this.explosions = this.game.add.group();
+  this.explosions.createMultiple(30, 'kaboom');
+  this.explosions.forEach(function(explosion){
+    explosion.anchor.x = 0.5;
+    explosion.anchor.y = 0.5;
+    explosion.animations.add('kaboom');
+  }, this);
+
+  // Add lives as star
+  this.lives = this.game.add.group();
+  for(var i=0; i<3; i++){
+    var star = this.lives.create(this.game.world.width - 100 + (30 * i), this.game.world.height - 30, 'star');
+  }
 
   // Initialize our score text
   var textString = 'Score: ' + this.score;
@@ -112,18 +152,35 @@ Game.prototype.update = function () {
   // Don't start to update before game is generated on canvas
   if (!this.ready) return;
 
+  // Gameover and clean up after player is dead.
+  if(this.lives.getFirstAlive() === null){
+    //this.game.state.start('gameover');
+    //this.players[this.myId].sprite.kill();
+    //delete this.players[this.myId];
+  }
+
   if (this.isHost) {
       this.basicEnemyGroup.spawn();
   }
 
-  this.basicEnemyGroup.group.forEachExists(function(enemy) { enemy.weapon.fire(); }, this);
+  this.basicEnemyGroup.group.forEachExists(function(enemy) {
+    enemy.weapon.fire();
+    // Existing enemies weapon hits player
+    for (var id in this.players) {
+      this.game.physics.arcade.overlap(this.players[id].sprite, enemy.weapon, this.enemyHitPlayerHandler.bind(this));
+    }
+  }, this);
 
   for (var id in this.players) {
+    // Player's bullet hits enemy
+    this.game.physics.arcade.overlap(this.players[id].weapon, this.basicEnemyGroup.group, this.playerShootEnemyHandler.bind(this));
+    // Player is in collision with enemy's ship
+    this.game.physics.arcade.overlap(this.players[id].sprite, this.basicEnemyGroup.group, this.enemyHitPlayerHandler.bind(this));
+    // Check state and update
     if (id === this.myId) {
         this.players[this.myId].checkState();
     }
     this.players[id].update();
-    this.game.physics.arcade.overlap(this.players[id].weapon, this.basicEnemyGroup.group, this.playerShootEnemyHandler.bind(this));
   }
 };
 

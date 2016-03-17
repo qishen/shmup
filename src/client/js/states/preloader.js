@@ -20,6 +20,8 @@ Preloader.prototype = {
     this.load.image('player1', 'static/assets/SpaceShooterRedux/PNG/playerShip1_blue.png');
     this.load.image('laser1', 'static/assets/SpaceShooterRedux/PNG/Lasers/laserBlue01.png');
     this.load.image('basic_enemy', 'static/assets/SpaceShooterRedux/PNG/Enemies/enemyBlack1.png');
+    this.load.image('star', 'static/assets/star.png');
+    this.load.spritesheet('kaboom', 'static/assets/SpaceShooterRedux/games/invaders/explode.png', 128, 128);
   },
 
   create: function () {
@@ -28,7 +30,7 @@ Preloader.prototype = {
 
   update: function () {
     // if (!!this.ready) {
-    this.game.state.start('menu');
+    this.game.state.start('game');
     // }
   },
 

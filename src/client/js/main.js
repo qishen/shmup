@@ -6,11 +6,11 @@
 
 // Import all stages in game
 var Boot = require('./states/boot');
-var Menu = require('./states/menu');
+var Gameover = require('./states/gameover');
 var Preloader = require('./states/preloader');
 var Game = require('./states/game');
 
-var GAME_WIDTH = 480;
+var GAME_WIDTH = 960;
 var GAME_HEIGHT = 640;
 
 window.addEventListener('load', function () {
@@ -20,7 +20,7 @@ window.addEventListener('load', function () {
 
   game.state.add('boot', Boot);
   game.state.add('preloader', Preloader);
-  game.state.add('menu', Menu);
+  game.state.add('gameover', Gameover);
   game.state.add('game', Game);
 
   game.state.start('boot');

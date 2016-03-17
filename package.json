@@ -4,11 +4,16 @@
   "readme": "",
   "repository": "",
   "version": "0.0.0",
+  "engines": {
+    "node": "4.2.1"
+  },
   "dependencies": {
+    "bower": "^1.7.7",
+    "ejs": "^2.4.1",
+    "express": "^4.13.4",
     "socket.io": "^1.4.5"
   },
   "devDependencies": {
-    "bower": "^1.7.7",
     "del": "^2.2.0",
     "gulp": "^3.9.1",
     "gulp-browserify": "^0.5.1",
@@ -32,6 +37,7 @@
     "watchify": "^3.7.0"
   },
   "scripts": {
+    "postinstall": "bower install",
     "bower-install": "node ./node_modules/bower/bin/bower install",
     "start": "node ./src/server/app.js",
     "gulp-start": "node ./node_modules/gulp/bin/gulp.js",

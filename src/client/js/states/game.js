@@ -102,6 +102,8 @@ Game.prototype.enemyHitPlayerHandler = function (player, enemy) {
 Game.prototype.create = function () {
   var self = this;
 
+  this.game.stage.disableVisibilityChange = true;
+
   // Our controls.
   this.cursors = this.game.input.keyboard.createCursorKeys();
   this.game.input.keyboard.addKeyCapture([ Phaser.Keyboard.SPACEBAR ]);
